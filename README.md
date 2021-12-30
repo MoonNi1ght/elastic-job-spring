@@ -69,7 +69,7 @@ elastic-job-spring support annotation
           @Override
           public void execute(ShardingContext shardingContext) {
               System.out.println("SelfSimpleJob,shardingContext = " + JSONObject.toJSONString(shardingContext));
-              System.out.println("SelfSimpleJob,定时任务执行, 现在的时间:  " + LocalTime.now() + "线程信息:" + Thread.currentThread().getName());
+              System.out.println("SelfSimpleJob, time info :  " + LocalTime.now() + "thread info :" + Thread.currentThread().getName());
           }
       }
       ```
