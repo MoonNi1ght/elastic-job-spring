@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.mc</groupId>
+    <artifactId>elastic-job-spring</artifactId>
+    <packaging>pom</packaging>
+    <version>${revision}</version>
+
+    <name>elastic-job-spring</name>
+    <description>elastic-job annotation extention for spring</description>
+
+
+    <modules>
+        <module>elastic-job-lite-spring-annotation</module>
+    </modules>
+
+    <properties>
+        <elastic-job.version>3.0.1</elastic-job.version>
+        <spring.version>5.2.5.RELEASE</spring.version>
+        <revision>1.0.0</revision>
+        <!-- 多模板版本控制 -->
+        <maven_flatten_version>1.1.0</maven_flatten_version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.shardingsphere.elasticjob</groupId>
+                <artifactId>elasticjob-lite-core</artifactId>
+                <version>${elastic-job.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <developers>
+        <developer>
+            <id>elastic-job</id>
+            <name>MoonNight</name>
+            <email>768179367@qq.com</email>
+            <url>https://github.com/768179367/elastic-job-spring</url>
+        </developer>
+    </developers>
+
+    <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.2.1</version>
+                    <configuration>
+                        <attach>true</attach>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${maven_flatten_version}</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>

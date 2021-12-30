@@ -21,3 +21,23 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+*.iml
+
+## Directory-based project format:
+.idea/
+
+
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+/build/
+
+*/target/*
+~/*
+*/~
+*.log
+*/.flattened-pom.xml
+/.flattened-pom.xml
