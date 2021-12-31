@@ -40,11 +40,7 @@ public class FlyBookJobErrorHandler extends AbstractHttpCreate implements JobErr
 
     private String secret;
 
-    private String contentType = "application/json; charset=utf-8";
-
-    private final int connectTimeoutMilliseconds = 2000;
-
-    private final int readTimeoutMilliseconds = 2000;
+    private final String CONTENT_TYPE = "application/json; charset=utf-8";
 
     private Logger logger = LoggerFactory.getLogger(FlyBookJobErrorHandler.class);
 
@@ -77,7 +73,7 @@ public class FlyBookJobErrorHandler extends AbstractHttpCreate implements JobErr
         RobotSignMsgEntry robotSignMsgEntry = buildEntry(jobName, cause);
         String reqContent = GsonFactory.getGson().toJson(robotSignMsgEntry);
         StringEntity entity = new StringEntity(reqContent, StandardCharsets.UTF_8);
-        entity.setContentType(contentType);
+        entity.setContentType(CONTENT_TYPE);
         postMethod.setEntity(entity);
     }
 
