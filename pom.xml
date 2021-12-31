@@ -15,16 +15,18 @@
 
     <modules>
         <module>elastic-job-lite-spring-annotation</module>
+        <module>elastic-job-error-handler-feishu</module>
     </modules>
 
     <properties>
         <elastic-job.version>3.0.1</elastic-job.version>
-        <spring.version>5.2.5.RELEASE</spring.version>
+        <spring.version>5.0.5.RELEASE</spring.version>
         <revision>1.0.0</revision>
         <!-- 多模板版本控制 -->
         <maven_flatten_version>1.1.0</maven_flatten_version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <httpclient.version>4.5.12</httpclient.version>
     </properties>
 
 
@@ -42,6 +44,17 @@
                 <version>${elastic-job.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.shardingsphere.elasticjob</groupId>
+                <artifactId>elasticjob-error-handler-spi</artifactId>
+                <version>${elastic-job.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

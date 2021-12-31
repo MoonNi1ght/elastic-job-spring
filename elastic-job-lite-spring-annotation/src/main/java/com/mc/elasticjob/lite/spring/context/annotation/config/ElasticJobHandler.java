@@ -67,6 +67,13 @@ public @interface ElasticJobHandler {
     boolean misfire() default true;
 
     /**
+     * 任务执行报错信息
+     *
+     * @return jobErrorHandlerType
+     */
+    String jobErrorHandlerType() default "";
+
+    /**
      * job 属性信息 配置 key=value,key1=value1
      * #{@link }
      *
@@ -90,6 +97,7 @@ public @interface ElasticJobHandler {
 
     /**
      * default is true, the same as spring name space
+     *
      * @return trace
      */
     boolean trace() default true;

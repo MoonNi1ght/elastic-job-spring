@@ -1,6 +1,5 @@
 package com.mc.elasticjob.lite.spring.context.annotation.config;
 
-
 import com.mc.elasticjob.lite.spring.context.annotation.ElasticJobConstant;
 import com.mc.elasticjob.lite.spring.util.ElasticJobPropertyConvert;
 import org.apache.shardingsphere.elasticjob.api.ElasticJob;
@@ -9,11 +8,12 @@ import org.apache.shardingsphere.elasticjob.reg.base.CoordinatorRegistryCenter;
 import org.apache.shardingsphere.elasticjob.tracing.api.TracingConfiguration;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.SmartLifecycle;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -28,9 +28,11 @@ import java.util.Objects;
  * @author mengcheng
  * @date 2021/02/28  下午4:57
  **/
-public class ElasticJobAnnotationBeanProcess implements BeanPostProcessor, BeanFactoryAware, SmartLifecycle {
+public class ElasticJobAnnotationBeanProcess implements BeanPostProcessor, ApplicationContextAware, SmartLifecycle {
 
     private ConfigurableListableBeanFactory configurableBeanFactory;
+
+    private AbstractApplicationContext applicationContext;
 
     private List<AnnotationMeta> earlyAnnotationBeanList;
 
@@ -90,17 +92,19 @@ public class ElasticJobAnnotationBeanProcess implements BeanPostProcessor, BeanF
 
     }
 
+
     @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        Assert.isInstanceOf(ConfigurableListableBeanFactory.class, beanFactory, "bea");
-        this.configurableBeanFactory = (ConfigurableListableBeanFactory) beanFactory;
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = (AbstractApplicationContext) applicationContext;
         earlyAnnotationBeanList = new ArrayList<>(16);
     }
 
 
+
+
     private boolean checkBeanDefinition(AnnotationMeta annotationMeta) {
         String jobBeanName = getJobBeanName(annotationMeta);
-        return !configurableBeanFactory.containsBeanDefinition(jobBeanName);
+        return !applicationContext.containsBeanDefinition(jobBeanName);
     }
 
     private String getJobBeanName(AnnotationMeta annotationMeta) {
@@ -116,19 +120,20 @@ public class ElasticJobAnnotationBeanProcess implements BeanPostProcessor, BeanF
             return;
         }
         synchronized (mutex) {
-            CoordinatorRegistryCenter registryCenter = configurableBeanFactory.getBean(CoordinatorRegistryCenter.class);
+            CoordinatorRegistryCenter registryCenter = applicationContext.getBean(CoordinatorRegistryCenter.class);
             // trace config
             TracingConfiguration<?> tracingConfiguration = getOneTraceConfig();
             earlyAnnotationBeanList.stream().filter(this::checkBeanDefinition).forEach(annotationMeta -> {
                 String jobBeanName = getJobBeanName(annotationMeta);
-                configurableBeanFactory.registerSingleton(jobBeanName,
-                        new ScheduleJobBootstrap(registryCenter, annotationMeta.elasticJob, ElasticJobPropertyConvert.convert(annotationMeta.elasticJobHandler, tracingConfiguration)));
+                ConfigurableListableBeanFactory beanFactory = applicationContext.getBeanFactory();
+                beanFactory.registerSingleton(jobBeanName,
+                        new ScheduleJobBootstrap(registryCenter, annotationMeta.elasticJob, ElasticJobPropertyConvert.convert(annotationMeta.elasticJobHandler, tracingConfiguration, applicationContext.getEnvironment())));
             });
         }
     }
 
     private TracingConfiguration<?> getOneTraceConfig() {
-        Map<String, TracingConfiguration> tracingConfigurationMap = configurableBeanFactory.getBeansOfType(TracingConfiguration.class);
+        Map<String, TracingConfiguration> tracingConfigurationMap = applicationContext.getBeansOfType(TracingConfiguration.class);
         if (tracingConfigurationMap.isEmpty()) {
             return null;
         }
@@ -142,7 +147,7 @@ public class ElasticJobAnnotationBeanProcess implements BeanPostProcessor, BeanF
             return;
         }
         synchronized (mutex) {
-            configurableBeanFactory.getBeansOfType(ScheduleJobBootstrap.class).values().forEach(ScheduleJobBootstrap::shutdown);
+            applicationContext.getBeansOfType(ScheduleJobBootstrap.class).values().forEach(ScheduleJobBootstrap::shutdown);
         }
     }
 
