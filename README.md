@@ -39,6 +39,49 @@ elastic-job-spring support annotation
   >   in you pom.xml.
   >
   > but but you want to use annotation(@ElasticjobHandler) to config you job. It is all compatible.
+  
+-   support feishu notice(only support group robot notice)
+
+  >  add depency to you pom.xml 
+  >
+  >  
+  >
+  > ```java
+  >  <dependency>
+  >             <groupId>com.mc.study</groupId>
+  >              <artifactId>elastic-job-error-handler-feishu</artifactId>
+  >             <version>${elastic-job.version</version>
+  >         </dependency>
+  > ```
+  >
+  > Use Annotation  suuch like 
+  >
+  > ```
+  > @Component
+  > @ElasticJobHandler(jobName = "simpleJob", corn = "0/25 * * * * ?", jobParameter = "my-job", shardingTotalCount = 1,
+  >         shardingItemParameters = "0=change,1=Shanghai,2=Guangzhou", overWrite = true,
+  >         jobErrorHandlerType = FlyBookPropertyConstants.HANDLER_ERROR_TYPE,
+  >         jobProperties = {@ElasticJobProperty(key = FlyBookPropertyConstants.WEB_HOOK, value = "${feishu.webHook}"),
+  >                 @ElasticJobProperty(key = FlyBookPropertyConstants.SECRET, value = "${feishu.secret}")
+  >         }
+  > )
+  > public class SelfSimpleJob implements SimpleJob {
+  > 
+  >     private static int i = 0;
+  > 
+  >     @Override
+  >     public void execute(ShardingContext shardingContext) {
+  >         if (i > 1) {
+  >             System.out.println("SelfDataflowJob int > 1 不能执行");
+  >             throw new RuntimeException("SelfDataflowJob int > 1 can not run ");
+  >         }
+  >         i++;
+  >         System.out.println("SelfSimpleJob,shardingContext = " + JSONObject.toJSONString(shardingContext));
+  >         System.out.println("SelfSimpleJob, scheduled time :  " + LocalTime.now() + "thread info :" + Thread.currentThread().getName());
+  >     }
+  > ```
+  >
+  > Sometimes, you company has many project in some environment , so you can use `${your.address}` in annotation, config the real address to spring container.
 
 ### How to Use
 
