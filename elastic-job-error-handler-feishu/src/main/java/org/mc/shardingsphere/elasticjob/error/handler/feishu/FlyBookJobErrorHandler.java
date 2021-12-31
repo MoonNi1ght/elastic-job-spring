@@ -1,5 +1,17 @@
 package org.mc.shardingsphere.elasticjob.error.handler.feishu;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.util.EntityUtils;
+import org.apache.shardingsphere.elasticjob.error.handler.JobErrorHandler;
+import org.apache.shardingsphere.elasticjob.infra.json.GsonFactory;
+import org.mc.shardingsphere.elasticjob.error.handler.enums.MsgTypeEnums;
+import org.mc.shardingsphere.elasticjob.error.handler.feishu.entry.AbstractMagEntry;
+import org.mc.shardingsphere.elasticjob.error.handler.feishu.entry.RobotSignMsgEntry;
+import org.mc.shardingsphere.elasticjob.error.handler.util.AbstractHttpCreate;
 import org.mc.shardingsphere.elasticjob.error.handler.util.HttpProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

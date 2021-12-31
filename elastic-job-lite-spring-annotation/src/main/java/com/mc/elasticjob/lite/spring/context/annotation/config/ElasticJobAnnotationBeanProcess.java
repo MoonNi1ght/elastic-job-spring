@@ -100,8 +100,6 @@ public class ElasticJobAnnotationBeanProcess implements BeanPostProcessor, Appli
     }
 
 
-
-
     private boolean checkBeanDefinition(AnnotationMeta annotationMeta) {
         String jobBeanName = getJobBeanName(annotationMeta);
         return !applicationContext.containsBeanDefinition(jobBeanName);
@@ -154,6 +152,21 @@ public class ElasticJobAnnotationBeanProcess implements BeanPostProcessor, Appli
     @Override
     public boolean isRunning() {
         return isRunning;
+    }
+
+    @Override
+    public boolean isAutoStartup() {
+        return true;
+    }
+
+    @Override
+    public void stop(Runnable callback) {
+        // noting to do
+    }
+
+    @Override
+    public int getPhase() {
+        return Integer.MAX_VALUE;
     }
 
     /**
