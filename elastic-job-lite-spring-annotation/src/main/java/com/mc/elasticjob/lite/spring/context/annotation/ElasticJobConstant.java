@@ -9,12 +9,12 @@ public interface ElasticJobConstant {
     /**
      * 处理 elastic-job 注解 Bean Name
      */
-    String ELASTIC_JOB_ANNOTATION_BEAN_PROCESS_NAME = "com.mc.elastic.job.spring.context.annotation.config.ElasticJobAnnotationBeanProcess";
+    String ELASTIC_JOB_ANNOTATION_BEAN_PROCESS_NAME = "com.mc.elasticjob.lite.spring.context.annotation.config.ElasticJobAnnotationBeanProcess";
 
     /**
      * 注册所有job的Bean Name
      */
-    String ELASTIC_JOB_START_BEAN_NAME = "com.mc.elastic.job.spring.context.event.ElasticContextRefreshListener";
+    String ELASTIC_JOB_START_BEAN_NAME = "com.mc.elasticjob.lite.spring.context.event.ElasticContextRefreshListener";
 
     /**
      * elastic-job spring boot start bean
