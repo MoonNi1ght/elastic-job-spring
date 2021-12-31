@@ -44,8 +44,6 @@ elastic-job-spring support annotation
 
   >  add depency to you pom.xml 
   >
-  >  
-  >
   > ```java
   >  <dependency>
   >             <groupId>com.mc.study</groupId>
@@ -81,7 +79,7 @@ elastic-job-spring support annotation
   >     }
   > ```
   >
-  > Sometimes, you company has many project in some environment , so you can use `${your.address}` in annotation, config the real address to spring container.
+  > Sometimes, your company has many different environment, but the same codes .  so you can use `${your.address}` in annotation, config the real address to spring container.
 
 ### How to Use
 
