@@ -1,3 +1,3 @@
 
 #### feishu spi handler type
-com.mc.elastic.job.error.handler.feishu.FlyBookJobErrorHandler
+com.mc.shardingsphere.elasticjob.error.handler.feishu.FlyBookJobErrorHandler
