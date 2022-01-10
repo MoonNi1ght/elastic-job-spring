@@ -19,7 +19,8 @@ import java.util.stream.Stream;
  * @see JobConfiguration
  **/
 public class ElasticJobPropertyConvert {
-    public static JobConfiguration convert(ElasticJobHandler elasticJobHandler, TracingConfiguration<?> tracingConfiguration, ConfigurableEnvironment environment) {
+    public static JobConfiguration convert(ElasticJobHandler elasticJobHandler, TracingConfiguration<?> tracingConfiguration,
+                                           ConfigurableEnvironment environment) {
         JobConfiguration.Builder jobConfigurationBuilder = JobConfiguration
                 .newBuilder(elasticJobHandler.jobName(), elasticJobHandler.shardingTotalCount())
                 .cron(elasticJobHandler.corn())
@@ -27,12 +28,24 @@ public class ElasticJobPropertyConvert {
                 .shardingItemParameters(elasticJobHandler.shardingItemParameters())
                 .disabled(elasticJobHandler.disabled())
                 .overwrite(elasticJobHandler.overWrite())
+                .reconcileIntervalMinutes(elasticJobHandler.reconcileIntervalMinutes())
                 .failover(elasticJobHandler.failOver())
-                .jobParameter(elasticJobHandler.jobParameter())
-                .misfire(elasticJobHandler.misfire());
+                .misfire(elasticJobHandler.misfire())
+                .monitorExecution(elasticJobHandler.monitorExecution())
+                .maxTimeDiffSeconds(elasticJobHandler.maxTimeDiffSeconds());
+        if (StringUtils.isNotEmpty(elasticJobHandler.timeZone())) {
+            jobConfigurationBuilder.timeZone(elasticJobHandler.timeZone());
+        }
         // set trace config
         if (Objects.nonNull(tracingConfiguration) && elasticJobHandler.trace()) {
             jobConfigurationBuilder.addExtraConfigurations(tracingConfiguration);
+        }
+        if (StringUtils.isNotEmpty(elasticJobHandler.description())) {
+            jobConfigurationBuilder.description(elasticJobHandler.description());
+        }
+        // shard strategy
+        if (StringUtils.isNotEmpty(elasticJobHandler.jobShardingStrategyType())) {
+            jobConfigurationBuilder.jobShardingStrategyType(elasticJobHandler.jobShardingStrategyType());
         }
         //  handler error
         if (StringUtils.isNoneBlank(elasticJobHandler.jobErrorHandlerType())) {

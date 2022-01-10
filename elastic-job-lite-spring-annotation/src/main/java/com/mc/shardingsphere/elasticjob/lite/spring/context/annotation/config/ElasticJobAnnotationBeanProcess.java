@@ -140,12 +140,21 @@ public class ElasticJobAnnotationBeanProcess implements BeanPostProcessor, Appli
 
     @Override
     public void stop() {
-        isRunning = false;
+        isRunning = true;
         if (CollectionUtils.isEmpty(earlyAnnotationBeanList)) {
             return;
         }
         synchronized (mutex) {
-            applicationContext.getBeansOfType(ScheduleJobBootstrap.class).values().forEach(ScheduleJobBootstrap::shutdown);
+            CoordinatorRegistryCenter registryCenter = applicationContext.getBean(CoordinatorRegistryCenter.class);
+            // trace config
+            TracingConfiguration<?> tracingConfiguration = getOneTraceConfig();
+            earlyAnnotationBeanList.stream().filter(this::checkBeanDefinition).forEach(annotationMeta -> {
+                String jobBeanName = getJobBeanName(annotationMeta);
+                ConfigurableListableBeanFactory beanFactory = applicationContext.getBeanFactory();
+                beanFactory.registerSingleton(jobBeanName,
+                        new ScheduleJobBootstrap(registryCenter, annotationMeta.elasticJob, ElasticJobPropertyConvert.convert(annotationMeta.elasticJobHandler, tracingConfiguration, applicationContext.getEnvironment())));
+            });
+            earlyAnnotationBeanList.clear();
         }
     }
 
@@ -161,7 +170,17 @@ public class ElasticJobAnnotationBeanProcess implements BeanPostProcessor, Appli
 
     @Override
     public void stop(Runnable callback) {
-        // noting to do
+        if (stopped()) {
+            return;
+        }
+        isRunning = false;
+        synchronized (mutex) {
+            applicationContext.getBeansOfType(ScheduleJobBootstrap.class).values().forEach(ScheduleJobBootstrap::shutdown);
+        }
+    }
+
+    private boolean stopped() {
+        return !isRunning;
     }
 
     @Override
