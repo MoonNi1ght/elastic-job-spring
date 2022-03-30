@@ -3,6 +3,7 @@ package com.mc.shardingsphere.elasticjob.lite.spring.context.event;
 import org.apache.shardingsphere.elasticjob.lite.api.bootstrap.impl.ScheduleJobBootstrap;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.ContextStartedEvent;
 
 /**
@@ -12,11 +13,11 @@ import org.springframework.context.event.ContextStartedEvent;
  * @date 2021/12/26  10:02 下午
  * @see org.springframework.context.event.ContextRefreshedEvent
  **/
-public class ElasticContextRefreshListener implements ApplicationListener<ContextStartedEvent> {
+public class ElasticContextRefreshListener implements ApplicationListener<ContextRefreshedEvent> {
 
 
     @Override
-    public void onApplicationEvent(ContextStartedEvent event) {
+    public void onApplicationEvent(ContextRefreshedEvent event) {
         ApplicationContext applicationContext = event.getApplicationContext();
         startScheduled(applicationContext);
     }
