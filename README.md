@@ -46,7 +46,7 @@ elastic-job-spring support annotation
   >
   > ```java
   >  <dependency>
-  >             <groupId>com.mc.study</groupId>
+  >             <groupId>com.mc</groupId>
   >              <artifactId>elastic-job-error-handler-feishu</artifactId>
   >             <version>${elastic-job.version</version>
   >         </dependency>
